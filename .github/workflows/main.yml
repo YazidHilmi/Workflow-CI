@@ -18,7 +18,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -r Workflow-CI/requirements.txt
+          pip install mlflow==2.19.0 
+          pip install pandas numpy scikit-learn
 
       - name: Run MLflow Project
         run: |
