@@ -7,21 +7,19 @@ from sklearn.preprocessing import StandardScaler
 import mlflow
 import mlflow.sklearn
 
-# 1. Argument parsing
+# Argument parsing
 parser = argparse.ArgumentParser()
 parser.add_argument("--n_estimators", type=int, default=100)
 parser.add_argument("--max_depth", type=int, default=None)
 parser.add_argument("--random_state", type=int, default=42)
 args = parser.parse_args()
 
-# 2. Tracking Setup
-# Catatan: Di GitHub Actions/CI, biarkan MLflow menangani URI secara otomatis
-# mlflow.set_tracking_uri("file:./mlruns") # Komentari ini jika jalan di CI
 
-# 3. Aktifkan Autolog sebelum proses training
+
+# Aktifkan Autolog sebelum proses training
 mlflow.sklearn.autolog()
 
-# 4. Load Dataset
+# Load Dataset
 # Pastikan file ini ada di folder yang sama dengan modelling.py saat di-push
 df = pd.read_csv("Titanic_Dataset_Analysis_preprocessing.csv")
 
@@ -36,10 +34,9 @@ scaler = StandardScaler()
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
 
-# 5. Set Experiment
+# Set Experiment
 mlflow.set_experiment("Titanic Random Forest")
 
-# 6. Jalankan Model (Tanpa 'with mlflow.start_run()' agar tidak bentrok di CI)
 # MLflow Project otomatis akan mencatat ke run yang sedang aktif
 model = RandomForestClassifier(
     n_estimators=args.n_estimators,
@@ -50,8 +47,6 @@ model = RandomForestClassifier(
 model.fit(X_train, y_train)
 
 accuracy = model.score(X_test, y_test)
-# Karena autolog sudah nyala, accuracy standar sudah tercatat, 
-# tapi kalau mau tambah manual ke active run:
 mlflow.log_metric("accuracy_manual", accuracy)
 
 print(f"Accuracy: {accuracy:.2f}")
