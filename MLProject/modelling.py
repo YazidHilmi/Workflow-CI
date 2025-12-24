@@ -20,7 +20,6 @@ args = parser.parse_args()
 mlflow.sklearn.autolog()
 
 # Load Dataset
-# Pastikan file ini ada di folder yang sama dengan modelling.py saat di-push
 df = pd.read_csv("Titanic_Dataset_Analysis_preprocessing.csv")
 
 X = df.drop("Survived", axis=1)
